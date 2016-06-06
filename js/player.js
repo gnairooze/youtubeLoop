@@ -1,23 +1,23 @@
-
 var player;
-var player_control;
 var video_id;
 var start, end;
 var player_control_height, player_control_width;
-var default_video = "";//"hRn6KDtq3W8";
+var default_video = "hRn6KDtq3W8";
 
 video_id = getParameter(location.href, "v");
 
 start = 60;
 end = 65;
 
-player_control = 'player';
 player_control_width = 640;
 player_control_height = 390;
 
 setDefualtIfEmpty();
 
+var player_control = document.getElementById("player");
+
 var message = document.getElementById("message");
+var bookmarks = document.getElementById("bookmarks");
 
 var video_code = document.getElementById("video_code");
 
@@ -27,7 +27,6 @@ var video_height = document.getElementById("height");
 var video_start = document.getElementById("start");
 var video_end = document.getElementById("end");
 
-
 var change_video = document.getElementById("change_video");
 change_video.onclick = changeVideo;
 
@@ -36,6 +35,9 @@ change_range.onclick = changeRange;
 
 var resize = document.getElementById("resize");
 resize.onclick = changeSize;
+
+var add_bookmark = document.getElementById("add_bookmark");
+add_bookmark.onclick = addBookmark;
 
 function changeSize(){
 	player_control_width = video_width.value;
@@ -69,6 +71,57 @@ function changeRange(){
 	displayRangeValues();
 }
 
+function addBookmark(){
+	var exists = checkBookmark();
+	if(exists)
+	{
+		message.value = "bookmark (" + video_start.value +","+ video_end.value + ") already exists";
+		return;
+	}
+
+	var bookmark = document.createElement("li");
+	
+	var restoreBookmark = document.createElement("a");
+	restoreBookmark.href = "#";
+	restoreBookmark.innerHTML = video_start.value +","+ video_end.value;
+	restoreBookmark.onclick = function(event){
+		var range = event.target.innerHTML.split(",");
+		video_start.value = range[0];
+		video_end.value = range[1];
+	}
+	bookmark.appendChild(restoreBookmark);
+
+	var spn = document.createElement("span");
+	spn.innerHTML = "   ";
+	bookmark.appendChild(spn);
+
+	var delBookmark = document.createElement("a");
+	delBookmark.href = "#";
+	delBookmark.innerHTML = "-";
+	delBookmark.onclick = function(event){
+		var li = event.target.parentElement;
+		var ol = event.target.parentElement.parentElement;
+
+		ol.removeChild(li);
+	}
+	bookmark.appendChild(delBookmark);
+
+	bookmark.id = video_start.value +"_"+ video_end.value;
+
+	bookmarks.appendChild(bookmark);
+}
+
+function checkBookmark(){
+	var exists = document.getElementById(video_start.value +"_"+ video_end.value);
+	if(exists){
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 function changeVideo(){
 	player.destroy();
 	message.value = "";
@@ -82,12 +135,10 @@ function changeVideo(){
 	displayVideoValue();
 }
 
-function setDefualtIfEmpty()
-{
+function setDefualtIfEmpty(){
 	if(video_id == null || video_id == "undefined" || video_id == ""){
-	video_id = default_video;
-}
-
+		video_id = default_video;
+	}
 }
 
 function onYouTubeIframeAPIReady() {
@@ -108,13 +159,17 @@ function onPlayerReady(event) {
 	event.target.seekTo(start, true);
 }
 
-var done = false;
+var repeatInterval;
 
 function onPlayerStateChange(event) {
-	if (event.data == YT.PlayerState.PLAYING && !done) {
-		setTimeout(repeatVideo, (end - start)*1000);
-		//done = true;
+	if (event.data == YT.PlayerState.PLAYING) {
+		repeatInterval = setInterval(repeatVideo, 1000);
 	}
+	else if (event.data == YT.PlayerState.PAUSED || event.data == YT.PlayerState.ENDED)
+	{
+		clearInterval(repeatInterval);
+	}
+
 }
 
 function onPlayerError(event){
@@ -145,5 +200,8 @@ function stopVideo() {
 }
 
 function repeatVideo(){
-	player.seekTo(start, true);
+	if(player.getCurrentTime() >= end)
+	{
+		player.seekTo(start, true);	
+	}
 }

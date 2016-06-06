@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>test</title>
+</head>
+<body>
+	<a id="testa" href="#">start count</a>
+	<input type="text" id="message"/>
+	<a id="testb" href="#">stop count</a>
+
+	<script	>
+		var testa = document.getElementById("testa");
+		var testb = document.getElementById("testb");
+		var message = document.getElementById("message");
+
+		var loopa;
+		var counter = 1;
+
+		testa.onclick = function(){
+			loopa = setInterval(repeata, 1000);
+		}
+
+		testb.onclick = function(){
+			clearInterval(loopa);
+		}
+
+		function repeata(){
+			message.value = counter;
+			counter++;
+		}
+	</script>
+</body>
+</html>
