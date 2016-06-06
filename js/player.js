@@ -39,6 +39,9 @@ resize.onclick = changeSize;
 var add_bookmark = document.getElementById("add_bookmark");
 add_bookmark.onclick = addBookmark;
 
+var fullscreen = document.getElementById("fullscreen");
+fullscreen.onclick = playVideo;
+
 function changeSize(){
 	player_control_width = video_width.value;
 	player_control_height = video_height.value;
@@ -156,7 +159,18 @@ function onYouTubeIframeAPIReady() {
 }
 
 function onPlayerReady(event) {
-	event.target.seekTo(start, true);
+	player_control = document.getElementById("player");
+
+	player.seekTo(start, true);
+}
+
+function playVideo() {
+	player.seekTo(start, true);
+
+	var requestFullScreen = player_control.requestFullScreen || player_control.mozRequestFullScreen || player_control.webkitRequestFullScreen;
+  	if (requestFullScreen) {
+    	requestFullScreen.bind(player_control)();
+  	}
 }
 
 var repeatInterval;
