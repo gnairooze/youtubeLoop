@@ -1,9 +1,11 @@
-var player;
+var default_video = "";//"hRn6KDtq3W8";
+var origin_domain = "http://localhost:8070/";
+
+var player, iframe;
 var video_id;
 var start, end;
 var player_control_height, player_control_width;
-var default_video = "";//"hRn6KDtq3W8";
-var origin_domain = "http://localhost:8070/";
+var repeatInterval;
 
 video_id = getParameter(location.href, "v");
 
@@ -129,6 +131,7 @@ function checkBookmark(){
 function changeVideo(){
 	if(player){
 		player.destroy();
+		clearInterval(repeatInterval);
 	}
 
 	message.value = "";
@@ -168,7 +171,7 @@ function onYouTubeIframeAPIReady() {
 }
 
 function onPlayerReady(event) {
-	player_control = document.getElementById("player");
+	iframe = document.getElementById("player");
 
 	player.seekTo(start, true);
 }
@@ -176,13 +179,11 @@ function onPlayerReady(event) {
 function playVideo() {
 	player.seekTo(start, true);
 
-	var requestFullScreen = player_control.requestFullScreen || player_control.mozRequestFullScreen || player_control.webkitRequestFullScreen;
+	var requestFullScreen = iframe.requestFullScreen || iframe.mozRequestFullScreen || iframe.webkitRequestFullScreen;
   	if (requestFullScreen) {
-    	requestFullScreen.bind(player_control)();
+    	requestFullScreen.bind(iframe)();
   	}
 }
-
-var repeatInterval;
 
 function onPlayerStateChange(event) {
 	if (event.data == YT.PlayerState.PLAYING) {
@@ -223,8 +224,9 @@ function stopVideo() {
 }
 
 function repeatVideo(){
-	if(player.getCurrentTime() >= end)
-	{
+	if(player.getCurrentTime){
+		if(player.getCurrentTime() >= end){
 		player.seekTo(start, true);	
+		}
 	}
 }
