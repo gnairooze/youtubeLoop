@@ -2,7 +2,7 @@ var player;
 var video_id;
 var start, end;
 var player_control_height, player_control_width;
-var default_video = "hRn6KDtq3W8";
+var default_video = "";//"hRn6KDtq3W8";
 var origin_domain = "http://localhost:8070/";
 
 video_id = getParameter(location.href, "v");
@@ -127,7 +127,10 @@ function checkBookmark(){
 }
 
 function changeVideo(){
-	player.destroy();
+	if(player){
+		player.destroy();
+	}
+
 	message.value = "";
 
 	video_id = video_code.value;
@@ -146,6 +149,10 @@ function setDefualtIfEmpty(){
 }
 
 function onYouTubeIframeAPIReady() {
+	if(video_id == "undefined" || video_id == ""){
+		return;
+	}
+
 	player = new YT.Player(player_control, {
 		height: player_control_height,
 		width: player_control_width,
