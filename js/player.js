@@ -3,6 +3,7 @@ var video_id;
 var start, end;
 var player_control_height, player_control_width;
 var default_video = "hRn6KDtq3W8";
+var origin_domain = "http://localhost:8070/";
 
 video_id = getParameter(location.href, "v");
 
@@ -150,6 +151,7 @@ function onYouTubeIframeAPIReady() {
 		width: player_control_width,
 		videoId: video_id,
 		playerVars: { 'autoplay': 1, 'controls': 2 },
+		origin: origin_domain,
 		events: {
 			'onReady': onPlayerReady,
 			'onStateChange': onPlayerStateChange,
