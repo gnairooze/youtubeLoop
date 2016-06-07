@@ -1,4 +1,4 @@
-var default_video = "";//"hRn6KDtq3W8";
+var default_video = "";
 var origin_domain = "http://localhost:8070/";
 
 var player, iframe;
@@ -6,11 +6,14 @@ var video_id;
 var start, end;
 var player_control_height, player_control_width;
 var repeatInterval;
+var canSetEnd;
 
 video_id = getParameter(location.href, "v");
 
-start = 60;
-end = 65;
+start = 0;
+end = 1;
+
+canSetEnd = true;
 
 player_control_width = 640;
 player_control_height = 390;
@@ -81,7 +84,7 @@ function addBookmark(){
 	var exists = checkBookmark();
 	if(exists)
 	{
-		message.value = "bookmark (" + video_start.value +","+ video_end.value + ") already exists";
+		message.innerHTML = "bookmark (" + video_start.value +","+ video_end.value + ") already exists";
 		return;
 	}
 
@@ -96,10 +99,6 @@ function addBookmark(){
 		video_end.value = range[1];
 	}
 	bookmark.appendChild(restoreBookmark);
-
-	var spn = document.createElement("span");
-	spn.innerHTML = "   ";
-	bookmark.appendChild(spn);
 
 	var delBookmark = document.createElement("a");
 	delBookmark.href = "#";
@@ -134,7 +133,9 @@ function changeVideo(){
 		clearInterval(repeatInterval);
 	}
 
-	message.value = "";
+	canSetEnd = true;
+
+	message.innerHTML = "";
 
 	video_id = video_code.value;
 
@@ -173,7 +174,15 @@ function onYouTubeIframeAPIReady() {
 function onPlayerReady(event) {
 	iframe = document.getElementById("player");
 
+	if(canSetEnd){
+		end = player.getDuration();
+		canSetEnd = false;
+	}
+
 	player.seekTo(start, true);
+
+	displayRangeValues();
+	displaySizeValues();
 }
 
 function playVideo() {
@@ -199,23 +208,23 @@ function onPlayerStateChange(event) {
 function onPlayerError(event){
 	if(event.data == "2")
 	{
-		message.value = "The request contains an invalid parameter value";
+		message.innerHTML = "The request contains an invalid parameter value";
 	}
 	else if(event.data == "5")
 	{
-		message.value = "The requested content cannot be played in an HTML5 player or another error related to the HTML5 player has occurred";
+		message.innerHTML = "The requested content cannot be played in an HTML5 player or another error related to the HTML5 player has occurred";
 	}
 	else if(event.data == "100")
 	{
-		message.value = "The video requested was not found";
+		message.innerHTML = "The video requested was not found";
 	}
 	else if(event.data == "101" || event.data == "150")
 	{
-		message.value = "The owner of the requested video does not allow it to be played in embedded players";
+		message.innerHTML = "The owner of the requested video does not allow it to be played in embedded players";
 	}
 	else
 	{
-		message.value = "Error occurred";
+		message.innerHTML = "Error occurred";
 	}
 }
 

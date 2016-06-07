@@ -1,42 +1,91 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+ 	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
 	<title>youtube player</title>
-	<script src="js/iframe_api.js" type="text/javascript" charset="utf-8" defer></script>
-	<!--<script src="https://www.youtube.com/iframe_api" type="text/javascript" charset="utf-8" defer></script>-->
-	<script src="js/utility.js" type="text/javascript" charset="utf-8" defer></script>
-	<script src="js/player.js" type="text/javascript" charset="utf-8" defer></script>
+	
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/youtubeloop.css" rel="stylesheet">
+	
+	<link rel="icon" type="image/png" href="img/youtubeloop.png">
 </head>
 <body>
-	<div>
-		<div>
-			<input type="text" name="mesage" id="message">
+	<div class="container-fluid">
+		<div class="jumbotron text-center small-caps">
+			<h1>YoutubeLoop</h1>
 		</div>
 		<div>
-			<input type="text" name="video_code" placeholder="Video Code" id="video_code" title="Video Code">
-			<a href="#" title="Change Video" id="change_video">Change Video</a>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="alert alert-info" name="mesage" id="message"></div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<input type="text" name="video_code" placeholder="Video Code" id="video_code" title="Video Code" class="form-control">	
+				</div>
+				<div class="col-md-6">
+					<a href="#" title="Change Video" id="change_video" class="btn btn-default btn-block">Change Video</a>	
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-3">
+					<input type="number" name="start" placeholder="Start" id="start" title="Start" class="form-control">	
+				</div>
+				<div class="col-md-3">
+					<input type="number" name="end" placeholder="End" id="end" title="End" class="form-control">
+				</div>
+				<div class="col-md-3">
+					<a href="#" title="Change Range" id="change_range" class="btn btn-default btn-block">Change Range</a>	
+				</div>
+				<div class="col-md-3">
+					<a href="#" title="Add Bookmark" id="add_bookmark" class="btn btn-default btn-block">Add Bookmark</a>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-3">
+					<input type="number" name="width" placeholder="Width" id="width" title="Width" class="form-control">	
+				</div>
+				<div class="col-md-3">
+					<input type="number" name="height" placeholder="Height" id="height" title="Height" class="form-control">	
+				</div>
+				<div class="col-md-6">
+					<a href="#" title="Change Size" id="resize" class="btn btn-default btn-block">Change Size</a>	
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<a href="#" title="Play Full Screen" id="fullscreen" class="btn btn-default btn-block">Play Full Screen</a>
+				</div>
+			</div>
 		</div>
-		<div>
-			<input type="text" name="start" placeholder="Start" id="start" title="Start">
-			<input type="text" name="end" placeholder="End" id="end" title="End">	
-			<a href="#" title="Change Range" id="change_range">Change Range</a>
-			<a href="#" title="Add Bookmark" id="add_bookmark">Add Bookmark</a>
+		<div class="row">
+			<div id="player" class="col-md-12"></div>	
 		</div>
-		<div>
-			<input type="text" name="width" placeholder="Width" id="width" title="Width">
-			<input type="text" name="height" placeholder="Height" id="height" title="Height">	
-			<a href="#" title="Change Size" id="resize">Change Size</a>
-		</div>
-		<div>
-			<a href="#" title="Play Full Screen" id="fullscreen">Play Full Screen</a>
-		</div>
-	</div>
-	<div id="player"></div>
-	<div>
-		<h2>bookmarks</h2>
-		<ol id="bookmarks">
+		<div class="row">
+			<div class="col-md-12 small-caps">
+				<h1>Bookmarks</h2>
+			</div>
+			<div class="col-md-12">
+				<nav class="nav navbar-left">
+					<ul id="bookmarks" class="pager">
 
-		</ol>	
+					</ul>
+				</nav>
+			</div>
+		</div>
 	</div>
+	<!--<script src="js/iframe_api.js" type="text/javascript" charset="utf-8" defer></script>-->
+	<script src="https://www.youtube.com/iframe_api" type="text/javascript" charset="utf-8" defer></script>
+	
+	<script src="js/jquery.min.js" type="text/javascript" charset="utf-8" defer></script>
+	<script src="js/bootstrap.min.js" type="text/javascript" charset="utf-8" defer></script>
+
+	<script src="js/utility.js" type="text/javascript" charset="utf-8" defer></script>
+	<script src="js/player.js" type="text/javascript" charset="utf-8" defer></script>
 </body>
 </html>
