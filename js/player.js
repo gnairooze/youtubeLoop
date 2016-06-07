@@ -143,7 +143,7 @@ function changeVideo(){
 
 	onYouTubeIframeAPIReady();
 
-	displayVideoValue();
+	//displayVideoValue();
 }
 
 function setDefualtIfEmpty(){
@@ -158,8 +158,7 @@ function onYouTubeIframeAPIReady() {
 	}
 
 	player = new YT.Player(player_control, {
-		height: player_control_height,
-		width: player_control_width,
+		width: '100%',
 		videoId: video_id,
 		playerVars: { 'autoplay': 1, 'controls': 2 },
 		origin: origin_domain,
@@ -182,7 +181,7 @@ function onPlayerReady(event) {
 	player.seekTo(start, true);
 
 	displayRangeValues();
-	displaySizeValues();
+	//displaySizeValues();
 }
 
 function playVideo() {
