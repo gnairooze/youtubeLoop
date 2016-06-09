@@ -46,7 +46,7 @@ var add_bookmark = document.getElementById("add_bookmark");
 add_bookmark.onclick = addBookmark;
 
 var fullscreen = document.getElementById("fullscreen");
-fullscreen.onclick = playVideo;
+fullscreen.onclick = runVideo;
 
 function changeSize(){
 	player_control_width = video_width.value;
@@ -165,12 +165,29 @@ function onYouTubeIframeAPIReady() {
 		events: {
 			'onReady': onPlayerReady,
 			'onStateChange': onPlayerStateChange,
-			'onError': onPlayerError
+			'onError': onPlayerError,
+			'onPlaybackQualityChange': onPlayerPlaybackQualityChange,
+			'onPlaybackRateChange': onPlayerPlaybackRateChange, 
+			'onApiChange': onPlayerApiChange
 		}
 	});
 }
 
+function onPlayerPlaybackQualityChange(event){
+	message.innerHTML = "Playback quality changed to " + event.data;
+}
+
+function onPlayerPlaybackRateChange(event){
+	message.innerHTML = "Playback rate changed to " + event.data;
+}
+
+function onPlayerApiChange(event){
+	message.innerHTML = "API changed";
+}
+
 function onPlayerReady(event) {
+	message.innerHTML = "player is ready.";
+
 	iframe = document.getElementById("player");
 
 	if(canSetEnd){
@@ -184,7 +201,7 @@ function onPlayerReady(event) {
 	//displaySizeValues();
 }
 
-function playVideo() {
+function runVideo() {
 	player.seekTo(start, true);
 
 	var requestFullScreen = iframe.requestFullScreen || iframe.mozRequestFullScreen || iframe.webkitRequestFullScreen;
@@ -196,12 +213,33 @@ function playVideo() {
 function onPlayerStateChange(event) {
 	if (event.data == YT.PlayerState.PLAYING) {
 		repeatInterval = setInterval(repeatVideo, 1000);
+		message.innerHTML = "Playing";
 	}
 	else if (event.data == YT.PlayerState.PAUSED || event.data == YT.PlayerState.ENDED)
 	{
 		clearInterval(repeatInterval);
-	}
 
+		if (event.data == YT.PlayerState.PAUSED)
+		{
+			message.innerHTML = "Paused";
+		}
+		else if (event.data == YT.PlayerState.ENDED)
+		{
+			message.innerHTML = "Ended";
+		}
+	}
+	else if (event.data == YT.PlayerState.BUFFERING)
+	{
+		message.innerHTML = "Buffering";
+	}
+	else if (event.data == YT.PlayerState.CUED)
+	{
+		message.innerHTML = "Cued";
+	}
+	else
+	{
+		message.innerHTML = "Player state changed to " + event.data;	
+	}
 }
 
 function onPlayerError(event){
@@ -223,7 +261,7 @@ function onPlayerError(event){
 	}
 	else
 	{
-		message.innerHTML = "Error occurred";
+		message.innerHTML = "Error occurred " + event.data;
 	}
 }
 
