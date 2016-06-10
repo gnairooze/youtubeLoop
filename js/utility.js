@@ -1,5 +1,4 @@
-function getParameter(url, name)
-{
+function getParameter(url, name){
 	name = name.replace(/[\[\]]/g, "\\$&"); 
 	code = null; 
 	
@@ -19,4 +18,14 @@ function getParameter(url, name)
 	} 
 	
 	return code;
+}
+
+function checkLocalStorageAvailability(){
+	if (typeof(Storage) !== "undefined"){
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
