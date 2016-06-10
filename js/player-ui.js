@@ -44,7 +44,7 @@ function onPlayerReady(event) {
 }
 
 function runVideo() {
-	player.seekTo(start, true);
+	//player.seekTo(start, true);
 
 	var requestFullScreen = iframe.requestFullScreen || iframe.mozRequestFullScreen || iframe.webkitRequestFullScreen;
   	if (requestFullScreen) {
@@ -126,8 +126,7 @@ function changeRange(){
 
 function changeVideo(){
 	resetMessage();
-	video_id = video_code.value;
-	video_name = video_title.value;
+	refeshVideoVariables();
 
 	changeVideoCode();
 }
