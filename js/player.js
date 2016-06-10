@@ -1,7 +1,7 @@
 var origin_domain = "http://localhost:8070/";
 
 var player;
-var video_id;
+var video_id, video_name;
 var start = 0;
 var end = 1;
 

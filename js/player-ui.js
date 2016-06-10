@@ -1,6 +1,7 @@
 var message = document.getElementById("message");
 
 var video_code = document.getElementById("video_code");
+var video_title = document.getElementById("video_title");
 var extract_video = document.getElementById("extract_video");
 extract_video.onclick = extractVideo;
 
@@ -126,6 +127,7 @@ function changeRange(){
 function changeVideo(){
 	resetMessage();
 	video_id = video_code.value;
+	video_name = video_title.value;
 
 	changeVideoCode();
 }
@@ -137,4 +139,9 @@ function extractVideo(){
 		video_id = video_param;
 		video_code.value = video_id;
 	}
+}
+
+function refeshVideoVariables(){
+	video_id = video_code.value;
+	video_name = video_title.value;
 }

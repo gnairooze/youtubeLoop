@@ -54,7 +54,7 @@ function createCode(name, code){
 	{
 		codes = [];
 	}
-	
+
 	codes.push(videoCode);
 
 	saveCodes();
@@ -86,12 +86,12 @@ function getCodes(){
 	return codes;
 }
 
-function addMark(code, mark){
+function addMark(name, code, mark){
 	var videoCode = getVideoCode(code);
 
 	if(videoCode == null)
 	{
-		videoCode = createCode(code, code);
+		videoCode = createCode(name, code);
 	}
 
 	videoCode.Marks.push(mark);

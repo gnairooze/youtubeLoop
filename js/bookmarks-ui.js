@@ -15,14 +15,16 @@ function addBookmark(){
 		return;
 	}
 
+	refeshVideoVariables();
+
 	var id = video_start.value +"_"+ video_end.value;
 	var value = video_start.value +","+ video_end.value;
 	
-	addMark(video_id, value);
+	addMark(video_name, video_id, value);
 
 	if(!checkVideoCode(video_id))
 	{
-		addVideoCode(video_id, video_id, true);	
+		addVideoCode(video_name, video_id, true);	
 		onSelectedVideoChanged();
 	}
 	else
@@ -105,6 +107,7 @@ function intializeVideoCodes(){
 			selectedVideoCode = videoCode.Code;
 
 			video_id = selectedVideoCode;
+			video_name = videoCode.Name;
 
 			videos.options.selectedIndex = 0;
 
@@ -128,7 +131,7 @@ function initializeMarks(code){
 		return;
 	}
 
-	for (var i = marks.length - 1; i >= 0; i--) {
+	for (var i = 0; i < marks.length; i++) {
 		var mark = marks[i];
 
 		var range = mark.split(",");
@@ -142,8 +145,10 @@ function initializeMarks(code){
 
 function onSelectedVideoChanged(){
 	video_id = videos.options[videos.options.selectedIndex].value;
+	video_name = videos.options[videos.options.selectedIndex].innerHTML;
 
 	video_code.value = video_id;
+	video_title.value = video_name;
 
 	initializeMarks(video_id);
 }
