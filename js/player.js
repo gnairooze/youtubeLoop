@@ -1,159 +1,28 @@
-var default_video = "";
 var origin_domain = "http://localhost:8070/";
 
-var player, iframe;
+var player;
 var video_id;
-var start, end;
-var player_control_height, player_control_width;
+var start = 0;
+var end = 1;
+
 var repeatInterval;
-var canSetEnd;
+var canResetRange;
 
-video_id = getParameter(location.href, "v");
+canResetRange = true;
 
-start = 0;
-end = 1;
-
-canSetEnd = true;
-
-player_control_width = 640;
-player_control_height = 390;
-
-setDefualtIfEmpty();
-
-var player_control = document.getElementById("player");
-
-var message = document.getElementById("message");
-var bookmarks = document.getElementById("bookmarks");
-
-var video_code = document.getElementById("video_code");
-
-var video_width = document.getElementById("width");
-var video_height = document.getElementById("height");
-
-var video_start = document.getElementById("start");
-var video_end = document.getElementById("end");
-
-var change_video = document.getElementById("change_video");
-change_video.onclick = changeVideo;
-
-var change_range = document.getElementById("change_range");
-change_range.onclick = changeRange;
-
-var resize = document.getElementById("resize");
-resize.onclick = changeSize;
-
-var add_bookmark = document.getElementById("add_bookmark");
-add_bookmark.onclick = addBookmark;
-
-var fullscreen = document.getElementById("fullscreen");
-fullscreen.onclick = runVideo;
-
-function changeSize(){
-	player_control_width = video_width.value;
-	player_control_height = video_height.value;
-
-	player.setSize(player_control_width, player_control_height);
-
-	diaplaySizeValues();
-}
-
-function displaySizeValues(){
-	video_width.value = player_control_width;
-	video_height.value = player_control_height;
-}
-
-function displayRangeValues(){
-	video_start.value = start;
-	video_end.value = end;
-}
-
-function displayVideoValue(){
-	video_code.value = video_id;
-}
-
-function changeRange(){
-	start = video_start.value;
-	end = video_end.value;
-
-	player.seekTo(start, true);
-
-	displayRangeValues();
-}
-
-function addBookmark(){
-	var exists = checkBookmark();
-	if(exists)
-	{
-		message.innerHTML = "bookmark (" + video_start.value +","+ video_end.value + ") already exists";
-		return;
-	}
-
-	var bookmark = document.createElement("li");
-	
-	var restoreBookmark = document.createElement("a");
-	restoreBookmark.href = "#";
-	restoreBookmark.innerHTML = video_start.value +","+ video_end.value;
-	restoreBookmark.onclick = function(event){
-		var range = event.target.innerHTML.split(",");
-		video_start.value = range[0];
-		video_end.value = range[1];
-	}
-	bookmark.appendChild(restoreBookmark);
-
-	var delBookmark = document.createElement("a");
-	delBookmark.href = "#";
-	delBookmark.innerHTML = "-";
-	delBookmark.onclick = function(event){
-		var li = event.target.parentElement;
-		var ol = event.target.parentElement.parentElement;
-
-		ol.removeChild(li);
-	}
-	bookmark.appendChild(delBookmark);
-
-	bookmark.id = video_start.value +"_"+ video_end.value;
-
-	bookmarks.appendChild(bookmark);
-}
-
-function checkBookmark(){
-	var exists = document.getElementById(video_start.value +"_"+ video_end.value);
-	if(exists){
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-function changeVideo(){
+function changeVideoCode(){
 	if(player){
 		player.destroy();
 		clearInterval(repeatInterval);
 	}
 
-	canSetEnd = true;
-
-	message.innerHTML = "";
-
-	video_id = video_code.value;
-
-	setDefualtIfEmpty();
+	canResetRange = true;
 
 	onYouTubeIframeAPIReady();
-
-	//displayVideoValue();
-}
-
-function setDefualtIfEmpty(){
-	if(video_id == null || video_id == "undefined" || video_id == ""){
-		video_id = default_video;
-	}
 }
 
 function onYouTubeIframeAPIReady() {
-	if(video_id == "undefined" || video_id == ""){
+	if(video_id == "undefined" || video_id == "" || video_id == null){
 		return;
 	}
 
@@ -173,106 +42,28 @@ function onYouTubeIframeAPIReady() {
 	});
 }
 
-function onPlayerPlaybackQualityChange(event){
-	message.innerHTML = "Playback quality changed to " + event.data;
-}
-
-function onPlayerPlaybackRateChange(event){
-	message.innerHTML = "Playback rate changed to " + event.data;
-}
-
-function onPlayerApiChange(event){
-	message.innerHTML = "API changed";
-}
-
-function onPlayerReady(event) {
-	message.innerHTML = "player is ready.";
-
-	iframe = document.getElementById("player");
-
-	if(canSetEnd){
+function resetVideoRange(){
+	if(canResetRange){
+		start = 0;
 		end = player.getDuration();
-		canSetEnd = false;
+		canResetRange = false;
 	}
-
-	player.seekTo(start, true);
-
-	displayRangeValues();
-	//displaySizeValues();
 }
 
-function runVideo() {
-	player.seekTo(start, true);
-
-	var requestFullScreen = iframe.requestFullScreen || iframe.mozRequestFullScreen || iframe.webkitRequestFullScreen;
-  	if (requestFullScreen) {
-    	requestFullScreen.bind(iframe)();
-  	}
-}
-
-function onPlayerStateChange(event) {
+function manageInterval(event){
 	if (event.data == YT.PlayerState.PLAYING) {
 		repeatInterval = setInterval(repeatVideo, 1000);
-		message.innerHTML = "Playing";
 	}
 	else if (event.data == YT.PlayerState.PAUSED || event.data == YT.PlayerState.ENDED)
 	{
 		clearInterval(repeatInterval);
-
-		if (event.data == YT.PlayerState.PAUSED)
-		{
-			message.innerHTML = "Paused";
-		}
-		else if (event.data == YT.PlayerState.ENDED)
-		{
-			message.innerHTML = "Ended";
-		}
 	}
-	else if (event.data == YT.PlayerState.BUFFERING)
-	{
-		message.innerHTML = "Buffering";
-	}
-	else if (event.data == YT.PlayerState.CUED)
-	{
-		message.innerHTML = "Cued";
-	}
-	else
-	{
-		message.innerHTML = "Player state changed to " + event.data;	
-	}
-}
-
-function onPlayerError(event){
-	if(event.data == "2")
-	{
-		message.innerHTML = "The request contains an invalid parameter value";
-	}
-	else if(event.data == "5")
-	{
-		message.innerHTML = "The requested content cannot be played in an HTML5 player or another error related to the HTML5 player has occurred";
-	}
-	else if(event.data == "100")
-	{
-		message.innerHTML = "The video requested was not found";
-	}
-	else if(event.data == "101" || event.data == "150")
-	{
-		message.innerHTML = "The owner of the requested video does not allow it to be played in embedded players";
-	}
-	else
-	{
-		message.innerHTML = "Error occurred " + event.data;
-	}
-}
-
-function stopVideo() {
-	player.stopVideo();
 }
 
 function repeatVideo(){
 	if(player.getCurrentTime){
 		if(player.getCurrentTime() >= end){
-		player.seekTo(start, true);	
+			player.seekTo(start, true);	
 		}
 	}
 }
