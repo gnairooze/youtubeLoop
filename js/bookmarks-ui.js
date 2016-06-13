@@ -7,6 +7,12 @@ videos.onchange = onSelectedVideoChanged;
 var add_bookmark = document.getElementById("add_bookmark");
 add_bookmark.onclick = addBookmark;
 
+var export_bookmarks = document.getElementById("export_bookmarks");
+export_bookmarks.onclick = exportData;
+
+var import_bookmarks = document.getElementById("import_bookmarks");
+import_bookmarks.onchange = importData;
+
 function addBookmark(){
 	var exists = checkBookmark();
 	if(exists)
@@ -95,6 +101,8 @@ function intializeVideoCodes(){
 	{
 		return;
 	}
+
+	videos.innerHTML = "";
 
 	for (var i = 0; i < codes.length; i++) {
 		var videoCode = codes[i];

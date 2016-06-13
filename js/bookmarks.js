@@ -138,3 +138,33 @@ function getMarks(code){
 		return null;
 	}
 }
+
+function exportData(){
+	var dataContent = "data:text/json;charset=utf-8,"+ JSON.stringify(codes);
+
+	var encodedUri = encodeURI(dataContent);
+
+	export_bookmarks.setAttribute("href", encodedUri);
+	export_bookmarks.setAttribute("download", "my_data.json");
+}
+
+function importData(event){
+	if(event.target.files == null || event.target.files == "undefined"){
+		message.innerHTML = "No files selected.";
+		return;
+	}
+
+	var reader = new FileReader();
+    // Read file into memory as UTF-8      
+    reader.readAsText(event.target.files[0]);
+    // Handle errors load
+    reader.onload = function(event){
+    	codes = JSON.parse(event.target.result);
+    	saveCodes();
+
+    	intializeVideoCodes();
+    };
+    reader.onerror = function(event){
+    	message.innerHTML = "Error in import bookmarks. " + event.target.error.name;
+    };
+}

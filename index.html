@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,6 +23,11 @@
 			<div class="row">
 				<div class="col-md-12">
 					<div class="alert alert-info" name="mesage" id="message"></div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12 small-caps">
+					<h2>Playback</h2>
 				</div>
 			</div>
 			<div class="row">
@@ -66,7 +72,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12 small-caps">
-				<h1>Bookmarks</h2>
+				<h2>Bookmarks</h2>
 			</div>
 		</div>
 		<div class="row">
@@ -82,6 +88,22 @@
 
 					</ul>
 				</nav>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 small-caps">
+				<h2>Export / Import</h2>
+			</div>
+		</div>
+		<div class="row">	
+			<div class="col-md-6">
+				<a href="#" title="Export" id="export_bookmarks" class="btn btn-default btn-block">Export Bookmarks</a>
+			</div>
+			<div class="col-md-6">
+				<div class="input-group">
+					<label for="import_bookmarks" class="input-group-addon">Import Bookmarks</label>
+					<input type="file" accept=".json" href="#" title="Import" id="import_bookmarks" class="form-control">	
+				</div>
 			</div>
 		</div>
 	</div>
